@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vocabulary and Listening - Music and Theatre</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js for easy interactivity -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .neon-border {
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.25);
+    }
+    .neon-glow-pink {
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    /* Custom scrollbar for better styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen selection:bg-fuchsia-500 selection:text-white" x-data="worksheetApp()">
+
+  <!-- Background Glowing Ambient Orbs -->
+  <div class="fixed top-[-20%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-violet-600/15 blur-[130px] pointer-events-none"></div>
+  <div class="fixed bottom-[-20%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-fuchsia-600/15 blur-[130px] pointer-events-none"></div>
+  <div class="fixed top-[40%] left-[35%] w-[40vw] h-[40vw] rounded-full bg-indigo-600/10 blur-[150px] pointer-events-none"></div>
+
+  <!-- Notification Banner (Toast) -->
+  <div 
+    x-show="toast.show" 
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 transform translate-y-2"
+    x-transition:enter-end="opacity-100 transform translate-y-0"
+    x-transition:leave="transition ease-in duration-200"
+    x-transition:leave-start="opacity-100 transform translate-y-0"
+    x-transition:leave-end="opacity-0 transform translate-y-2"
+    class="fixed bottom-6 right-6 z-50 p-4 rounded-2xl shadow-2xl flex items-center gap-3 border"
+    :class="{
+      'bg-emerald-950/90 border-emerald-500/50 text-emerald-200': toast.type === 'success',
+      'bg-rose-950/90 border-rose-500/50 text-rose-200': toast.type === 'error',
+      'bg-indigo-950/90 border-indigo-500/50 text-indigo-200': toast.type === 'info'
+    }"
+    style="display: none;"
+  >
+    <span class="text-xl" x-text="toast.type === 'success' ? '✓' : 'ℹ'"></span>
+    <p class="text-sm font-medium" x-text="toast.message"></p>
+  </div>
+
+  <!-- Reset Confirmation Dialog Modal -->
+  <div 
+    x-show="showResetModal" 
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm"
+    x-transition
+    style="display: none;"
+  >
+    <div @click.away="showResetModal = false" class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl relative overflow-hidden">
+      <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 to-amber-500"></div>
+      <h3 class="text-lg font-bold text-slate-100 mb-2">Очистити весь прогрес?</h3>
+      <p class="text-sm text-slate-400 mb-6">Це безповоротно видалить усі ваші поточні відповіді, пари та збережені нотатки.</p>
+      <div class="flex justify-end gap-3">
+        <button @click="showResetModal = false" class="px-4 py-2 text-sm bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl transition">Скасувати</button>
+        <button @click="confirmReset()" class="px-4 py-2 text-sm bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl transition">Так, видалити</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-7xl mx-auto px-4 py-8 relative z-10">
+    
+    <!-- Top Header & Toolbar -->
+    <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-6 border-b border-slate-800/80">
+      <div>
+        <div class="flex flex-wrap items-center gap-2 mb-2">
+          <span class="px-3 py-1 text-xs font-bold uppercase tracking-wider bg-violet-500/10 text-violet-400 rounded-full border border-violet-500/20">Unit 2: What is Art?</span>
+          <span class="px-3 py-1 text-xs font-medium bg-slate-850 text-slate-400 rounded-full border border-slate-800">Reference: image_726185.jpg</span>
+        </div>
+        <h1 class="text-3xl md:text-5xl font-extrabold bg-gradient-to-r from-violet-400 via-fuchsia-400 to-amber-300 bg-clip-text text-transparent tracking-tight">
+          Vocabulary & Listening
+        </h1>
+        <p class="text-slate-400 mt-1.5 text-sm md:text-base">Сучасний цифровий робочий зошит • Music and Theatre</p>
+      </div>
+      
+      <!-- Action Toolbar -->
+      <div class="flex flex-wrap items-center gap-3 mt-4 md:mt-0 w-full md:w-auto">
+        <button @click="showResetModal = true" class="flex-1 md:flex-initial px-4 py-2.5 text-sm bg-slate-900 hover:bg-slate-850 text-slate-300 rounded-xl transition border border-slate-800 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4 text-rose-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+          Скинути відповіді
+        </button>
+        <button @click="toggleCheck()" class="flex-1 md:flex-initial px-5 py-2.5 text-sm font-semibold rounded-xl transition shadow-lg flex items-center justify-center gap-2"
+          :class="showScores ? 'bg-amber-500 hover:bg-amber-400 text-slate-950 shadow-amber-500/10' : 'bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:opacity-90 text-white shadow-violet-500/20'">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path x-show="!showScores" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <path x-show="showScores" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          </svg>
+          <span x-text="showScores ? 'Редагувати відповіді' : 'Перевірити результати'"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Column: Vocabulary Tasks -->
+      <div class="lg:col-span-7 space-y-8">
+        
+        <!-- EXERCISE 1: Match beginnings and ends -->
+        <section class="glass-panel rounded-3xl p-6 border border-slate-800/80 relative overflow-hidden group hover:border-violet-500/30 transition-colors duration-300">
+          <div class="absolute top-0 right-0 w-36 h-36 bg-violet-600/5 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-3">
+              <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-violet-500/20 text-violet-400 font-bold border border-violet-500/30 text-sm">1</span>
+              <h2 class="text-base md:text-lg font-bold text-slate-100">Match the beginnings (1–6) with the ends (a–f).</h2>
+            </div>
+            <!-- Progress badge for matched items -->
+            <span class="text-xs bg-slate-900 border border-slate-800 text-slate-400 px-2.5 py-1 rounded-lg" x-text="`З'єднано: ${Object.keys(matchedPairs).length}/6`"></span>
+          </div>
+
+          <!-- Matching Platform -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            <!-- Left Side: Beginnings (1-6) -->
+            <div class="space-y-2.5">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-violet-400 block mb-1">Початок речення</span>
+              <template x-for="(beg, idx) in beginnings" :key="beg.id">
+                <button 
+                  @click="selectBeginning(beg.id)"
+                  :class="{
+                    'border-violet-500 bg-violet-500/10 text-violet-200 ring-2 ring-violet-500/30': selectedBeg === beg.id,
+                    'border-emerald-500/40 bg-emerald-500/5 text-emerald-300': matchedPairs[beg.id] !== undefined && showScores && isPairCorrect(beg.id),
+                    'border-rose-500/40 bg-rose-500/5 text-rose-300': matchedPairs[beg.id] !== undefined && showScores && !isPairCorrect(beg.id),
+                    'border-fuchsia-500/40 bg-fuchsia-950/20 text-fuchsia-300': matchedPairs[beg.id] !== undefined && !showScores,
+                    'border-slate-800 hover:border-slate-700 hover:bg-slate-900/60 text-slate-300': selectedBeg !== beg.id && matchedPairs[beg.id] === undefined
+                  }"
+                  class="w-full text-left p-3 rounded-xl border transition-all duration-200 flex items-center justify-between text-sm group min-h-[48px]"
+                >
+                  <span class="flex items-center gap-3">
+                    <span class="text-xs font-bold text-slate-500 group-hover:text-slate-300 transition-colors" x-text="beg.id"></span>
+                    <span class="font-medium" x-text="beg.text"></span>
+                  </span>
+                  
+                  <!-- Matched pair letter badge -->
+                  <span 
+                    x-show="matchedPairs[beg.id] !== undefined" 
+                    :class="{
+                      'bg-emerald-500/20 text-emerald-400 border-emerald-500/30': showScores && isPairCorrect(beg.id),
+                      'bg-rose-500/20 text-rose-400 border-rose-500/30': showScores && !isPairCorrect(beg.id),
+                      'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/30': !showScores
+                    }"
+                    class="px-2 py-0.5 text-xs font-extrabold rounded-lg border uppercase ml-2"
+                    x-text="matchedPairs[beg.id]"
+                  ></span>
+                </button>
+              </template>
+            </div>
+
+            <!-- Right Side: Ends (a-f) -->
+            <div class="space-y-2.5">
+              <span class="text-[11px] font-bold uppercase tracking-wider text-fuchsia-400 block mb-1">Кінець речення</span>
+              <template x-for="end in ends" :key="end.letter">
+                <button 
+                  @click="selectEnd(end.letter)"
+                  :class="{
+                    'border-fuchsia-500 bg-fuchsia-500/10 text-fuchsia-200 ring-2 ring-fuchsia-500/30': selectedEnd === end.letter,
+                    'border-slate-800 hover:border-slate-700 hover:bg-slate-900/60 text-slate-300': selectedEnd !== end.letter
+                  }"
+                  class="w-full text-left p-3 rounded-xl border transition-all duration-200 flex items-start gap-3 text-sm min-h-[48px]"
+                >
+                  <span class="flex items-center justify-center w-5 h-5 rounded-lg bg-slate-800 text-slate-300 font-bold text-xs mt-0.5 uppercase" x-text="end.letter"></span>
+                  <span class="text-slate-300 font-medium" x-text="end.text"></span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <!-- Matching Instructions and Actions -->
+          <div class="mt-4 p-3 bg-slate-950/80 rounded-2xl border border-slate-900/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-400">
+            <span class="flex items-center gap-1.5">
+              <span class="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse"></span>
+              <span x-show="!selectedBeg && !selectedEnd">Оберіть цифру ліворуч, а потім відповідну літеру праворуч.</span>
+              <span x-show="selectedBeg && !selectedEnd" class="text-violet-300 font-semibold">Тепер оберіть закінчення речення справа.</span>
+              <span x-show="!selectedBeg && selectedEnd" class="text-fuchsia-300 font-semibold">Тепер оберіть початок речення зліва.</span>
+            </span>
+            <button x-show="Object.keys(matchedPairs).length > 0" @click="matchedPairs = {}" class="text-rose-400 hover:text-rose-300 hover:underline font-semibold self-end sm:self-auto transition">Очистити зв'язки</button>
+          </div>
+        </section>
+
+        <!-- EXERCISE 2: Circle the correct options -->
+        <section class="glass-panel rounded-3xl p-6 border border-slate-800/80 relative overflow-hidden group hover:border-fuchsia-500/30 transition-colors duration-300">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-fuchsia-500/20 text-fuchsia-400 font-bold border border-fuchsia-500/30 text-sm">2</span>
+            <h2 class="text-base md:text-lg font-bold text-slate-100">Circle the correct options.</h2>
+          </div>
+
+          <div class="space-y-3.5">
+            <!-- Sentence 1 -->
+            <div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-850 hover:bg-slate-900/60 transition-colors text-sm">
+              <div class="flex flex-wrap items-center gap-2 leading-relaxed">
+                <span class="text-xs text-slate-500 font-extrabold bg-slate-900/80 w-6 h-6 rounded-lg flex items-center justify-center">1</span>
+                <span>When the</span>
+                <!-- Multi-choice tabs -->
+                <div class="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-850">
+                  <button @click="selectQ2(0, 'orchestra')" :class="q2[0] === 'orchestra' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">orchestra</button>
+                  <button @click="selectQ2(0, 'audience')" :class="q2[0] === 'audience' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">audience</button>
+                </div>
+                <span>stopped playing their instruments, we stood up and clapped.</span>
+                
+                <!-- Feedback block -->
+                <template x-if="showScores">
+                  <span class="ml-auto flex items-center gap-1">
+                    <span x-show="q2[0] === 'orchestra'" class="text-emerald-400 text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">✓ Правильно</span>
+                    <span x-show="q2[0] !== 'orchestra'" class="text-rose-400 text-xs font-bold bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-md">✗ Помилка</span>
+                  </span>
+                </template>
+              </div>
+            </div>
+
+            <!-- Sentence 2 -->
+            <div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-850 hover:bg-slate-900/60 transition-colors text-sm">
+              <div class="flex flex-wrap items-center gap-2 leading-relaxed">
+                <span class="text-xs text-slate-500 font-extrabold bg-slate-900/80 w-6 h-6 rounded-lg flex items-center justify-center">2</span>
+                <span>In the final</span>
+                <div class="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-850">
+                  <button @click="selectQ2(1, 'show')" :class="q2[1] === 'show' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">show</button>
+                  <button @click="selectQ2(1, 'scene')" :class="q2[1] === 'scene' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">scene</button>
+                </div>
+                <span>the friends say goodbye and the film finishes.</span>
+                
+                <template x-if="showScores">
+                  <span class="ml-auto flex items-center gap-1">
+                    <span x-show="q2[1] === 'scene'" class="text-emerald-400 text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">✓ Правильно</span>
+                    <span x-show="q2[1] !== 'scene'" class="text-rose-400 text-xs font-bold bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-md">✗ Помилка</span>
+                  </span>
+                </template>
+              </div>
+            </div>
+
+            <!-- Sentence 3 -->
+            <div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-850 hover:bg-slate-900/60 transition-colors text-sm">
+              <div class="flex flex-wrap items-center gap-2 leading-relaxed">
+                <span class="text-xs text-slate-500 font-extrabold bg-slate-900/80 w-6 h-6 rounded-lg flex items-center justify-center">3</span>
+                <span>I really want the</span>
+                <div class="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-850">
+                  <button @click="selectQ2(2, 'line')" :class="q2[2] === 'line' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">line</button>
+                  <button @click="selectQ2(2, 'part')" :class="q2[2] === 'part' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">part</button>
+                </div>
+                <span>of Romeo in the school production of Romeo and Juliet.</span>
+                
+                <template x-if="showScores">
+                  <span class="ml-auto flex items-center gap-1">
+                    <span x-show="q2[2] === 'part'" class="text-emerald-400 text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">✓ Правильно</span>
+                    <span x-show="q2[2] !== 'part'" class="text-rose-400 text-xs font-bold bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-md">✗ Помилка</span>
+                  </span>
+                </template>
+              </div>
+            </div>
+
+            <!-- Sentence 4 -->
+            <div class="p-4 bg-slate-900/40 rounded-2xl border border-slate-850 hover:bg-slate-900/60 transition-colors text-sm">
+              <div class="flex flex-wrap items-center gap-2 leading-relaxed">
+                <span class="text-xs text-slate-500 font-extrabold bg-slate-900/80 w-6 h-6 rounded-lg flex items-center justify-center">4</span>
+                <span>What's your favourite type of</span>
+                <div class="inline-flex p-1 bg-slate-950 rounded-xl border border-slate-850">
+                  <button @click="selectQ2(3, 'part')" :class="q2[3] === 'part' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">part</button>
+                  <button @click="selectQ2(3, 'show')" :class="q2[3] === 'show' ? 'bg-violet-600 text-white font-bold' : 'text-slate-400 hover:text-white'" class="px-2.5 py-1 rounded-lg text-xs transition duration-150">show</button>
+                </div>
+                <span>: dance, music or theatre?</span>
+                
+                <template x-if="showScores">
+                  <span class="ml-auto flex items-center gap-1">
+                    <span x-show="q2[3] === 'show'" class="text-emerald-400 text-xs font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-md">✓ Правильно</span>
+                    <span x-show="q2[3] !== 'show'" class="text-rose-400 text-xs font-bold bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded-md">✗ Помилка</span>
+                  </span>
+                </template>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXERCISE 3: Write personal responses -->
+        <section class="glass-panel rounded-3xl p-6 border border-slate-800/80 relative overflow-hidden group hover:border-amber-500/30 transition-colors duration-300">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30 text-sm">3</span>
+            <h2 class="text-base md:text-lg font-bold text-slate-100">Answer the questions (Personal Experience).</h2>
+          </div>
+
+          <div class="space-y-5">
+            <div>
+              <label class="block text-sm text-slate-300 font-semibold mb-2">1. Have you ever written lyrics for a song? What was the song about?</label>
+              <textarea x-model="q3[0]" placeholder="Введіть свою відповідь англійською..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-slate-200 text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 outline-none transition-all duration-150 h-20 resize-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm text-slate-300 font-semibold mb-2">2. Have you ever performed in a play or a show? What part did you have?</label>
+              <textarea x-model="q3[1]" placeholder="Введіть свою відповідь англійською..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-slate-200 text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 outline-none transition-all duration-150 h-20 resize-none"></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm text-slate-300 font-semibold mb-2">3. Have you ever played in or been to see an orchestra? Which one?</label>
+              <textarea x-model="q3[2]" placeholder="Введіть свою відповідь англійською..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3.5 text-slate-200 text-sm focus:ring-2 focus:ring-violet-500 focus:border-violet-500 outline-none transition-all duration-150 h-20 resize-none"></textarea>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <!-- Right Column: Interactive media, Audio, and Listening Tasks -->
+      <div class="lg:col-span-5 space-y-8">
+        
+        <!-- AUDIO PLAYER & IMAGE PREVIEW SECTION -->
+        <section class="bg-gradient-to-br from-violet-900/40 to-fuchsia-950/20 rounded-3xl border border-violet-500/20 p-5 backdrop-blur-md relative overflow-hidden neon-border">
+          
+          <!-- Decorative gradient grid inside -->
+          <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(139,92,246,0.1),transparent)] pointer-events-none"></div>
+
+          <!-- Stylized Image Placeholder labeled 'image_726185.jpg' -->
+          <div class="relative rounded-2xl overflow-hidden aspect-[4/3] bg-slate-950 mb-5 group border border-slate-800">
+            <!-- Full Overlay gradient -->
+            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent z-10"></div>
+            
+            <!-- Real-looking Alma Deutscher sketch portrait with piano overlay -->
+            <div class="absolute inset-0 flex flex-col justify-end p-5 z-20">
+              <span class="text-[10px] font-extrabold tracking-wider text-violet-400 bg-violet-950/90 border border-violet-800/60 px-2.5 py-1 rounded-lg self-start mb-1.5 uppercase">Alma Deutscher inside image_726185.jpg</span>
+              <h3 class="text-xl font-extrabold text-white tracking-tight">Alma Deutscher</h3>
+              <p class="text-xs text-slate-300 font-medium">Young composing prodigy at her piano • Cinderella Opera</p>
+            </div>
+
+            <!-- Stylized CSS Art representing image_726185.jpg -->
+            <div class="w-full h-full flex items-center justify-center bg-slate-950 relative overflow-hidden">
+              <!-- Grid Background pattern -->
+              <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e1b4b_1px,transparent_1px),linear-gradient(to_bottom,#1e1b4b_1px,transparent_1px)] bg-[size:24px_24px] opacity-30"></div>
+              
+              <!-- Keyboard silhouette sketch inside -->
+              <div class="absolute bottom-0 w-full h-1/3 bg-slate-900 flex justify-between px-2 gap-[1px]">
+                <template x-for="i in 16">
+                  <div class="bg-slate-300 w-full h-full rounded-b relative flex justify-end">
+                    <div x-show="i % 3 !== 0" class="absolute bg-slate-950 w-2/3 h-2/3 top-0 left-[-33%] z-10 rounded-b"></div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- Violin sketch outline -->
+              <svg class="w-24 h-24 text-fuchsia-500/25 absolute top-10 transform -rotate-12 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Smart Audio Player -->
+          <div class="bg-slate-950/95 rounded-2xl p-4 border border-slate-850 shadow-inner">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-violet-500 animate-ping"></span>
+                🎧 Unit 2 Track 1 (Listening Activity)
+              </span>
+              
+              <!-- File Upload Node -->
+              <label class="cursor-pointer text-[10px] font-bold bg-violet-950/50 hover:bg-violet-900/60 text-violet-300 border border-violet-800/40 px-2 py-1 rounded-md transition text-center">
+                <span>📁 Завантажити MP3</span>
+                <input type="file" accept="audio/*" class="hidden" @change="handleAudioUpload($event)">
+              </label>
+            </div>
+
+            <!-- Custom HTML5 Audio element -->
+            <audio x-ref="audioPlayer" @timeupdate="onAudioTimeUpdate()" @loadedmetadata="onAudioLoaded()" class="hidden"></audio>
+
+            <!-- Player controls & tracker -->
+            <div class="flex items-center gap-3.5 mb-3.5">
+              <button @click="togglePlay()" class="flex-shrink-0 w-12 h-12 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-600 hover:opacity-90 text-white flex items-center justify-center shadow-lg shadow-violet-500/20 transition duration-150">
+                <svg x-show="!playing" class="w-6 h-6 fill-current ml-0.5" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                <svg x-show="playing" class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+              </button>
+              
+              <div class="flex-1">
+                <div class="flex justify-between text-[11px] text-slate-400 font-bold mb-1">
+                  <span x-text="audioSource === 'uploaded' ? 'Режим: Справжнє аудіо 🟢' : 'Режим: Симуляція 🟡'"></span>
+                  <span x-text="formattedTime()"></span>
+                </div>
+                <!-- Interactive Scrub Bar -->
+                <div @click="scrubAudio($event)" class="bg-slate-800/80 h-2.5 rounded-full relative overflow-hidden cursor-pointer group">
+                  <div class="bg-gradient-to-r from-violet-500 to-fuchsia-500 h-full rounded-full transition-all duration-75 relative" :style="`width: ${audioProgress}%`">
+                    <!-- Glow thumb -->
+                    <div class="absolute right-0 top-0 h-full w-2 bg-white rounded-full shadow-md shadow-white"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Subtitles/Transcript block (matching real Melanie & David dialogue) -->
+            <div class="p-3.5 bg-slate-900/60 rounded-xl border border-slate-850/60 min-h-[90px] flex flex-col justify-center text-center text-xs text-slate-300 italic transition-all duration-300">
+              <p class="font-bold text-fuchsia-400 not-italic mb-1 text-xs uppercase tracking-widest" x-text="activeSubtitle.speaker"></p>
+              <p class="transition-all duration-300 text-slate-200 leading-relaxed font-medium" x-text="activeSubtitle.text"></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXERCISE 4 & 5: Listening comprehension activities -->
+        <section class="glass-panel rounded-3xl p-6 border border-slate-800/80 space-y-6">
+          
+          <!-- Exercise 4 -->
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-violet-500/20 text-violet-400 font-bold border border-violet-500/30 text-sm">4</span>
+              <h2 class="text-base font-bold text-slate-100">Listen to Melanie & David. Answer the questions.</h2>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <label class="block text-xs text-slate-400 font-semibold mb-1.5">1. How does Melanie feel about Alma at the beginning?</label>
+                <input x-model="q4[0]" type="text" placeholder="Melanie's response at the start..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 focus:ring-1 focus:ring-violet-500 outline-none">
+                <template x-if="showScores">
+                  <span class="text-xs text-amber-400 block mt-1.5 font-semibold">💡 Suggested: She feels skeptical, doubtful, or unbelieving. ("I don't think so / I don't know")</span>
+                </template>
+              </div>
+              <div>
+                <label class="block text-xs text-slate-400 font-semibold mb-1.5">2. Does she feel differently at the end?</label>
+                <input x-model="q4[1]" type="text" placeholder="Melanie's final opinion..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-sm text-slate-200 focus:ring-1 focus:ring-violet-500 outline-none">
+                <template x-if="showScores">
+                  <span class="text-xs text-amber-400 block mt-1.5 font-semibold">💡 Suggested: Yes, she is highly impressed and wants to become the next "Little Mozart".</span>
+                </template>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exercise 5 -->
+          <div class="pt-5 border-t border-slate-800/80">
+            <div class="flex items-center gap-3 mb-4">
+              <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-fuchsia-500/20 text-fuchsia-400 font-bold border border-fuchsia-500/30 text-sm">5</span>
+              <h2 class="text-base font-bold text-slate-100">Listen again and answer the questions.</h2>
+            </div>
+
+            <div class="space-y-4">
+              <!-- Q5-1 -->
+              <div class="text-xs">
+                <label class="block text-slate-300 mb-1.5 font-semibold">1. How does David know so much about Alma Deutscher?</label>
+                <input x-model="q5[0]" type="text" placeholder="Where did David see her?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 text-sm outline-none focus:ring-1 focus:ring-violet-500">
+                <div class="mt-1 flex items-center justify-between">
+                  <span class="text-slate-500 text-[10px]">Reference book answer: "He watched a programme on YouTube."</span>
+                  <span x-show="showScores" :class="checkQ5_1() ? 'text-emerald-400' : 'text-rose-400'" class="font-bold text-[11px]" x-text="checkQ5_1() ? '✓ Правильно' : '✗ Спробуйте ще'"></span>
+                </div>
+              </div>
+
+              <!-- Q5-2 -->
+              <div class="text-xs">
+                <label class="block text-slate-300 mb-1.5 font-semibold">2. What art form is Alma's Cinderella?</label>
+                <input x-model="q5[1]" type="text" placeholder="What genre of music is it?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 text-sm outline-none focus:ring-1 focus:ring-violet-500">
+                <div class="mt-1 flex items-center justify-between">
+                  <span class="text-slate-500 text-[10px]">Suggested answer: "Opera"</span>
+                  <span x-show="showScores" :class="checkQ5_2() ? 'text-emerald-400' : 'text-rose-400'" class="font-bold text-[11px]" x-text="checkQ5_2() ? '✓ Правильно' : '✗ Спробуйте ще'"></span>
+                </div>
+              </div>
+
+              <!-- Q5-3 -->
+              <div class="text-xs">
+                <label class="block text-slate-300 mb-1.5 font-semibold">3. What musical instruments does Alma play?</label>
+                <input x-model="q5[2]" type="text" placeholder="Which instruments are mentioned?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 text-sm outline-none focus:ring-1 focus:ring-violet-500">
+                <div class="mt-1 flex items-center justify-between">
+                  <span class="text-slate-500 text-[10px]">Suggested answer: "Violin and piano"</span>
+                  <span x-show="showScores" :class="checkQ5_3() ? 'text-emerald-400' : 'text-rose-400'" class="font-bold text-[11px]" x-text="checkQ5_3() ? '✓ Правильно' : '✗ Спробуйте ще'"></span>
+                </div>
+              </div>
+
+              <!-- Q5-4 -->
+              <div class="text-xs">
+                <label class="block text-slate-300 mb-1.5 font-semibold">4. Where was the performance of Cinderella?</label>
+                <input x-model="q5[3]" type="text" placeholder="In which classical capital?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 text-sm outline-none focus:ring-1 focus:ring-violet-500">
+                <div class="mt-1 flex items-center justify-between">
+                  <span class="text-slate-500 text-[10px]">Suggested answer: "Vienna"</span>
+                  <span x-show="showScores" :class="checkQ5_4() ? 'text-emerald-400' : 'text-rose-400'" class="font-bold text-[11px]" x-text="checkQ5_4() ? '✓ Правильно' : '✗ Спробуйте ще'"></span>
+                </div>
+              </div>
+
+              <!-- Q5-5 -->
+              <div class="text-xs">
+                <label class="block text-slate-300 mb-1.5 font-semibold">5. How does Alma get some of her ideas and melodies?</label>
+                <input x-model="q5[4]" type="text" placeholder="How do they come to her?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 text-sm outline-none focus:ring-1 focus:ring-violet-500">
+                <div class="mt-1 flex items-center justify-between">
+                  <span class="text-slate-500 text-[10px]">Suggested answer: "In dreams"</span>
+                  <span x-show="showScores" :class="checkQ5_5() ? 'text-emerald-400' : 'text-rose-400'" class="font-bold text-[11px]" x-text="checkQ5_5() ? '✓ Правильно' : '✗ Спробуйте ще'"></span>
+                </div>
+              </div>
+
+              <!-- Q5-6 -->
+              <div class="text-xs">
+                <label class="block text-slate-300 mb-1.5 font-semibold">6. What activity is a waste of precious time, according to Alma?</label>
+                <input x-model="q5[5]" type="text" placeholder="What does she say is a waste?" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 text-sm outline-none focus:ring-1 focus:ring-violet-500">
+                <div class="mt-1 flex items-center justify-between">
+                  <span class="text-slate-500 text-[10px]">Suggested answer: "Watching TV / watching television"</span>
+                  <span x-show="showScores" :class="checkQ5_6() ? 'text-emerald-400' : 'text-rose-400'" class="font-bold text-[11px]" x-text="checkQ5_6() ? '✓ Правильно' : '✗ Спробуйте ще'"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- EXERCISE 6: Research Notebook task -->
+        <section class="bg-gradient-to-br from-slate-900 to-slate-950 rounded-3xl p-6 border border-slate-800 shadow-2xl relative overflow-hidden group hover:border-amber-500/20 transition-all">
+          <div class="absolute top-0 right-0 w-28 h-28 bg-fuchsia-500/5 rounded-full blur-2xl pointer-events-none"></div>
+          
+          <div class="flex items-center gap-3 mb-4">
+            <span class="flex items-center justify-center w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 font-bold border border-amber-500/30 text-sm">6</span>
+            <h2 class="text-base md:text-lg font-bold text-slate-100">Personal Research Notebook</h2>
+          </div>
+          <p class="text-xs text-slate-400 mb-4 leading-relaxed">
+            Find out about another talented young person like Alma Deutscher. Write a short paragraph about their life and achievements.
+          </p>
+
+          <div class="space-y-4">
+            <textarea x-model="notebookEntry" placeholder="e.g., Lydian Nadhaswaram is an Indian pianist who won 'The World's Best' competition. He started playing drums at two and can play two pianos simultaneously at blistering speeds..." class="w-full bg-slate-950 border border-slate-850 rounded-2xl p-4 text-slate-200 text-sm focus:ring-2 focus:ring-fuchsia-500 outline-none transition-all duration-150 h-36 resize-none"></textarea>
+            
+            <button @click="saveNotebook()" class="w-full py-3 bg-gradient-to-r from-violet-600 to-fuchsia-600 hover:from-violet-500 hover:to-fuchsia-500 text-white font-semibold rounded-xl text-sm transition shadow-lg shadow-fuchsia-950/40 flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" /></svg>
+              Зберегти нотатки у файл
+            </button>
+          </div>
+        </section>
+
+      </div>
+
+    </div>
+
+    <!-- Footer of the book -->
+    <footer class="mt-16 text-center text-xs text-slate-600 py-6 border-t border-slate-900">
+      <p>© Modern Interactive ESL Smartbook Hub. Designed for classroom & remote learning.</p>
+    </footer>
+  </div>
+
+  <!-- App Engine Logic -->
+  <script>
+    function worksheetApp() {
+      return {
+        // App controls
+        showScores: false,
+        showResetModal: false,
+        toast: { show: false, message: '', type: 'info' },
+
+        // Audio controls
+        playing: false,
+        audioProgress: 0,
+        audioDuration: 0,
+        audioCurrentTime: 0,
+        audioSource: 'simulated', // 'simulated' | 'uploaded'
+        simulationInterval: null,
+
+        // Exercise 1 Match States
+        selectedBeg: null,
+        selectedEnd: null,
+        matchedPairs: {},
+        beginnings: [
+          { id: '1', text: 'The words of a song' },
+          { id: '2', text: 'A recording studio is where' },
+          { id: '3', text: 'The words an actor says' },
+          { id: '4', text: 'The audience are the people' },
+          { id: '5', text: 'You have an audition when' },
+          { id: '6', text: 'During a rehearsal' }
+        ],
+        ends: [
+          { letter: 'a', text: 'who listen to the orchestra.' },
+          { letter: 'b', text: 'you want a part or role in a play or show.' },
+          { letter: 'c', text: 'are called the lyrics.' },
+          { letter: 'd', text: 'you practise a play, concert or show.' },
+          { letter: 'e', text: 'are called the lines.' },
+          { letter: 'f', text: 'singers and musicians record their music.' }
+        ],
+        exercise1Keys: {
+          '1': 'c',
+          '2': 'f',
+          '3': 'e',
+          '4': 'a',
+          '5': 'b',
+          '6': 'd'
+        },
+
+        // Exercise responses
+        q2: [null, null, null, null],
+        q3: ['', '', ''],
+        q4: ['', ''],
+        q5: ['', '', '', '', '', ''],
+        notebookEntry: '',
+
+        // Synced Dialogue Lines (matching real recording perfectly)
+        dialogueLines: [
+          { speaker: "Intro", start: 0, end: 3, text: "Unit 2, Track 1. Listen to David & Melanie..." },
+          { speaker: "David", start: 3, end: 8, text: "Melanie, have you ever heard of a musician called Alma Deutscher?" },
+          { speaker: "Melanie", start: 8, end: 10, text: "No, I don't think so." },
+          { speaker: "David", start: 10, end: 20, text: "They call her Little Mozart. I've just watched a programme on YouTube about her. She's written an opera called Cinderella." },
+          { speaker: "Melanie", start: 20, end: 33, text: "An opera? That's unusual. There haven't been very many famous women composers. I can't think of any. But then I'm not a big fan of classical music." },
+          { speaker: "David", start: 33, end: 38, text: "This composer isn't even a woman yet. She's younger than us." },
+          { speaker: "Melanie", start: 38, end: 41, text: "And she's written an opera?" },
+          { speaker: "David", start: 41, end: 55, text: "She's also composed sonatas and concertos for violin and piano, and performed herself. She's a brilliant player, and extremely confident." },
+          { speaker: "Melanie", start: 55, end: 57, text: "Really? Has she been on TV?" },
+          { speaker: "David", start: 57, end: 62, text: "Yes, lots of times. They've even performed her opera in Vienna." },
+          { speaker: "Melanie", start: 62, end: 65, text: "She's not like most teenagers." },
+          { speaker: "David", start: 65, end: 72, text: "I know. She has said that her ideas and melodies often come to her in dreams." },
+          { speaker: "Melanie", start: 72, end: 73, text: "Amazing." },
+          { speaker: "David", start: 73, end: 81, text: "She says her family have never had a television. In fact, she said in several interviews that watching TV is a waste of precious time." },
+          { speaker: "Melanie", start: 81, end: 89, text: "Hmm, I should stop watching so much TV. Then maybe I can be the next Little Mozart." },
+          { speaker: "David", start: 89, end: 92, text: "You never know!" }
+        ],
+        activeSubtitle: { speaker: "Play Dialog", text: "Оберіть файл MP3 або натисніть Play, щоб прослухати аудіозапис." },
+
+        init() {
+          // Restore progress safely
+          const stored = localStorage.getItem('esl_worksheet_track1');
+          if (stored) {
+            try {
+              const data = JSON.parse(stored);
+              this.matchedPairs = data.matchedPairs || {};
+              this.q2 = data.q2 || [null, null, null, null];
+              this.q3 = data.q3 || ['', '', ''];
+              this.q4 = data.q4 || ['', ''];
+              this.q5 = data.q5 || ['', '', '', '', '', ''];
+              this.notebookEntry = data.notebookEntry || '';
+            } catch (e) {
+              console.error('Помилка завантаження збережених даних', e);
+            }
+          }
+
+          // Save states when changed
+          this.$watch('matchedPairs', () => this.saveProgress());
+          this.$watch('q2', () => this.saveProgress());
+          this.$watch('q3', () => this.saveProgress());
+          this.$watch('q4', () => this.saveProgress());
+          this.$watch('q5', () => this.saveProgress());
+          this.$watch('notebookEntry', () => this.saveProgress());
+
+          // Set default duration for simulated audio (approx 92s)
+          this.audioDuration = 92;
+        },
+
+        triggerToast(msg, type = 'info') {
+          this.toast.message = msg;
+          this.toast.type = type;
+          this.toast.show = true;
+          setTimeout(() => {
+            this.toast.show = false;
+          }, 3500);
+        },
+
+        saveProgress() {
+          const payload = {
+            matchedPairs: this.matchedPairs,
+            q2: this.q2,
+            q3: this.q3,
+            q4: this.q4,
+            q5: this.q5,
+            notebookEntry: this.notebookEntry
+          };
+          localStorage.setItem('esl_worksheet_track1', JSON.stringify(payload));
+        },
+
+        confirmReset() {
+          this.matchedPairs = {};
+          this.q2 = [null, null, null, null];
+          this.q3 = ['', '', ''];
+          this.q4 = ['', ''];
+          this.q5 = ['', '', '', '', '', ''];
+          this.notebookEntry = '';
+          this.showScores = false;
+          this.showResetModal = false;
+          
+          // Reset audio
+          this.stopAudio();
+          
+          this.triggerToast("Прогрес успішно очищено!", "success");
+        },
+
+        toggleCheck() {
+          this.showScores = !this.showScores;
+          if (this.showScores) {
+            this.triggerToast("Відповіді перевірено! Зверніть увагу на підказки.", "info");
+          }
+        },
+
+        // Exercise 1 Logic
+        selectBeginning(id) {
+          if (this.showScores) return;
+          this.selectedBeg = id;
+          this.checkAndExecuteMatch();
+        },
+
+        selectEnd(letter) {
+          if (this.showScores) return;
+          this.selectedEnd = letter;
+          this.checkAndExecuteMatch();
+        },
+
+        checkAndExecuteMatch() {
+          if (this.selectedBeg && this.selectedEnd) {
+            this.matchedPairs[this.selectedBeg] = this.selectedEnd;
+            this.selectedBeg = null;
+            this.selectedEnd = null;
+            this.triggerToast("Пару зафіксовано!", "success");
+          }
+        },
+
+        isPairCorrect(id) {
+          return this.matchedPairs[id] === this.exercise1Keys[id];
+        },
+
+        // Exercise 2 Logic
+        selectQ2(index, value) {
+          if (this.showScores) return;
+          this.q2[index] = value;
+        },
+
+        // Exercise 5 validation helpers
+        checkQ5_1() {
+          const val = this.q5[0].toLowerCase();
+          return val.includes('youtube') || val.includes('programme') || val.includes('program');
+        },
+        checkQ5_2() {
+          return this.q5[1].toLowerCase().trim().includes('opera');
+        },
+        checkQ5_3() {
+          const val = this.q5[2].toLowerCase();
+          return val.includes('piano') && val.includes('violin');
+        },
+        checkQ5_4() {
+          return this.q5[3].toLowerCase().includes('vienna');
+        },
+        checkQ5_5() {
+          const val = this.q5[4].toLowerCase();
+          return val.includes('dream');
+        },
+        checkQ5_6() {
+          const val = this.q5[5].toLowerCase();
+          return val.includes('tv') || val.includes('television') || val.includes('watch');
+        },
+
+        // Upload & Real Audio Engine logic
+        handleAudioUpload(event) {
+          const file = event.target.files[0];
+          if (!file) return;
+
+          const player = this.$refs.audioPlayer;
+          const objectURL = URL.createObjectURL(file);
+          
+          player.src = objectURL;
+          this.audioSource = 'uploaded';
+          this.playing = false;
+          
+          // Clear simulation loop if any
+          if (this.simulationInterval) {
+            clearInterval(this.simulationInterval);
+            this.simulationInterval = null;
+          }
+
+          this.triggerToast(`Справжній файл ${file.name} завантажено успішно!`, "success");
+        },
+
+        onAudioLoaded() {
+          const player = this.$refs.audioPlayer;
+          this.audioDuration = player.duration || 92;
+        },
+
+        onAudioTimeUpdate() {
+          if (this.audioSource !== 'uploaded') return;
+          const player = this.$refs.audioPlayer;
+          this.audioCurrentTime = player.currentTime;
+          this.audioProgress = (player.currentTime / this.audioDuration) * 100;
+          this.updateSubtitles(player.currentTime);
+        },
+
+        // Simulated loop
+        runSimulation() {
+          const step = 0.5; // updates every 500ms
+          this.simulationInterval = setInterval(() => {
+            if (!this.playing) return;
+            this.audioCurrentTime += step;
+            if (this.audioCurrentTime >= this.audioDuration) {
+              this.stopAudio();
+              return;
+            }
+            this.audioProgress = (this.audioCurrentTime / this.audioDuration) * 100;
+            this.updateSubtitles(this.audioCurrentTime);
+          }, 500);
+        },
+
+        updateSubtitles(seconds) {
+          const active = this.dialogueLines.find(line => seconds >= line.start && seconds <= line.end);
+          if (active) {
+            this.activeSubtitle = active;
+          } else {
+            this.activeSubtitle = { speaker: "Melanie & David", text: "Listening carefully..." };
+          }
+        },
+
+        togglePlay() {
+          const player = this.$refs.audioPlayer;
+          this.playing = !this.playing;
+
+          if (this.audioSource === 'uploaded') {
+            if (this.playing) {
+              player.play();
+            } else {
+              player.pause();
+            }
+          } else {
+            // Simulated player logic
+            if (this.playing) {
+              this.runSimulation();
+            } else {
+              if (this.simulationInterval) {
+                clearInterval(this.simulationInterval);
+                this.simulationInterval = null;
+              }
+            }
+          }
+        },
+
+        stopAudio() {
+          this.playing = false;
+          this.audioCurrentTime = 0;
+          this.audioProgress = 0;
+          if (this.audioSource === 'uploaded') {
+            const player = this.$refs.audioPlayer;
+            player.pause();
+            player.currentTime = 0;
+          } else {
+            if (this.simulationInterval) {
+              clearInterval(this.simulationInterval);
+              this.simulationInterval = null;
+            }
+          }
+          this.activeSubtitle = { speaker: "Play Dialog", text: "Аудіо прослухано повністю. Дайте відповідь на запитання!" };
+        },
+
+        scrubAudio(e) {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const clickX = e.clientX - rect.left;
+          const percent = clickX / rect.width;
+          const targetSeconds = percent * this.audioDuration;
+
+          this.audioProgress = percent * 100;
+          this.audioCurrentTime = targetSeconds;
+
+          if (this.audioSource === 'uploaded') {
+            this.$refs.audioPlayer.currentTime = targetSeconds;
+          } else {
+            this.updateSubtitles(targetSeconds);
+          }
+        },
+
+        formattedTime() {
+          const format = (s) => {
+            const mins = Math.floor(s / 60);
+            const secs = Math.floor(s % 60);
+            return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+          };
+          return `${format(this.audioCurrentTime)} / ${format(this.audioDuration)}`;
+        },
+
+        saveNotebook() {
+          if (!this.notebookEntry.trim()) {
+            this.triggerToast("Напишіть щось у нотатнику перед збереженням!", "error");
+            return;
+          }
+          try {
+            const blob = new Blob([this.notebookEntry], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'My_Creative_Music_Notebook.txt';
+            link.click();
+            URL.revokeObjectURL(url);
+            this.triggerToast("Нотатки завантажено у файл!", "success");
+          } catch (e) {
+            this.triggerToast("Не вдалося завантажити файл. Скопіюйте текст вручну.", "error");
+          }
+        }
+      };
+    }
+  </script>
+</body>
+</html>
